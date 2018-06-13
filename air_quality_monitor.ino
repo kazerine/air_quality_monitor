@@ -112,31 +112,37 @@ void loop() {
 
    // Read sensor values from analog pin A0
    MQ135 gasSensor = MQ135(A0);
-   // take average of five values //
-   float read1 = gasSensor.getPPM();
+   float rzeroCO = gasSensor.getRZeroCO();
+   Serial.println("rzero co =" +String(rzeroCO)+ " //co resistance");
+   
+   float rzeroCO2 = gasSensor.getRZeroCO2();
+   Serial.println("rzero co2 =" +String(rzeroCO2)+ " //co2 resistance");
+   
+   float co2_1 = gasSensor.getCO2PPM();
+   float co_1 = gasSensor.getCOPPM();
    delay(1000);
-   float read2 = gasSensor.getPPM();
+   float co2_2 = gasSensor.getCO2PPM();
+   float co_2 = gasSensor.getCOPPM();
    delay(1000);
-   float read3 = gasSensor.getPPM();
+   float co2_3 = gasSensor.getCO2PPM();
+   float co_3 = gasSensor.getCOPPM();
    delay(1000);
-   float read4 = gasSensor.getPPM();
+   float co2_4 = gasSensor.getCO2PPM();
+   float co_4 = gasSensor.getCOPPM();
    delay(1000);
-   float read5 = gasSensor.getPPM();
+   float co2_5 = gasSensor.getCO2PPM();
+   float co_5 = gasSensor.getCOPPM();
    delay(1000);
-   float air_quality = ( read1 + read2 + read3 + read4 + read5 ) / 5;
+   float air_quality_co2 = ( co2_1 + co2_2 + co2_3 + co2_4 + co2_5 ) / 5;
    lcd.setCursor (0, 0);
    lcd.print ("CO2: ");
-   lcd.print (air_quality);
+   lcd.print (air_quality_co2);
    lcd.print (" PPM ");
-   lcd.setCursor (0,1);
-     
-        if (isnan(air_quality)) {
-        if (DEBUG) Serial.println("Failed to read from mq135");
-      }
-      else {
-          if (DEBUG)  Serial.println("co2 ="+String(air_quality)+" ppm");
-           thingSpeakWrite(air_quality);                                      // call write function to write values to thingspeak
-      }
-     
-  delay(3000);  
+   float air_quality_co = ( co_1 + co_2 + co_3 + co_4 + co_5 ) / 5;
+   lcd.setCursor (0, 1);
+   lcd.print (" CO: ");
+   lcd.print (air_quality_co);
+   lcd.print (" PPM ");
+   thingSpeakWrite(air_quality);                                      // call write function to write values to thingspeak
+   delay(3000);  
 }
