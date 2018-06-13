@@ -1,7 +1,7 @@
 
 /* Arduino + Esp8266 + ThingSpeak + MQ135 + 16x2 LCD 
  * Project name = "Air Quality Monitor Using Arduino Uno, MQ135 and ESP8266"
- * About = "takes voltage reading from mq135 converts it to co2(in ppm), displays it to LCD 
+ * About = "takes voltage reading from mq135 converts it to co2 and co(in ppm), displays it to LCD 
  * and also uploads data to thingspeak channel using ESP8266 wifi module
  * github.com/kazerine
  */
@@ -13,12 +13,9 @@ SoftwareSerial espSerial =  SoftwareSerial(2,3);      // arduino RX pin=2  ardui
 #include <LiquidCrystal.h>                            // header file for lcd
 int Contrast=500;
 LiquidCrystal lcd(12,11, 7, 6, 5, 4);                 // define pins of lcd connected to arduino
-
 const int sensorPin = A0;                              // sensor connected to analog0 pin of arduino
 int air_quality;
-
 String apiKey = "16-char-write-key";                    // channel's thingspeak WRITE API key
-
 String ssid="yournetworksssid";         // Wifi network SSID
 String password ="yournetworkpassword";   // Wifi network password
 boolean DEBUG=true;               // Enable debugging through serial monitor
@@ -47,26 +44,18 @@ boolean thingSpeakWrite(float value1, float value2){
     if (DEBUG) Serial.println("AT+CIPSTART error");
     return false;
   }
-  
-  
   String getStr = "GET /update?api_key=";   // prepare GET string
   getStr += apiKey;
-  
   getStr +="&field1=";
   getStr += String(value1);
   getStr +="&field2=";
   getStr += String(value2);
-  // getStr +="&field3=";
-  // getStr += String(value3);
-  // ...
   getStr += "\r\n\r\n";
-
   // send data length
   cmd = "AT+CIPSEND=";
   cmd += String(getStr.length());
   espSerial.println(cmd);
   if (DEBUG)  Serial.println(cmd);
-  
   if(espSerial.find(">")){
     espSerial.print(getStr);
     if (DEBUG)  Serial.print(getStr);
@@ -104,11 +93,8 @@ void setup() {
   lcd.begin(16,2);
    if (DEBUG)  Serial.println("Setup completed");
 }
-
-
 // ====================================================================== loop
 void loop() {
-
    // Read sensor values from analog pin A0
    MQ135 gasSensor = MQ135(A0);
    float rzeroCO = gasSensor.getRZeroCO();
@@ -142,6 +128,6 @@ void loop() {
    lcd.print (" CO: ");
    lcd.print (air_quality_co);
    lcd.print (" PPM ");
-   thingSpeakWrite(air_quality);                                      // call write function to write values to thingspeak
-   delay(3000);  
+   thingSpeakWrite(air_quality_co2,air_quality_co);                                      // call write function to write values to thingspeak
+   delay(10000);  
 }
