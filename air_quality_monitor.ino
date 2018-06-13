@@ -129,22 +129,7 @@ void loop() {
    lcd.print (air_quality);
    lcd.print (" PPM ");
    lcd.setCursor (0,1);
-     if (air_quality<350)
-       {
-          lcd.print("    Fresh Air   ");
-       }
-     else if( air_quality>350 && air_quality<1000 )
-       {
-            lcd.print("Avg. Air Quality");
-        }
-     else if (air_quality>1000 && air_quality<2000 )
-        {
-             lcd.print("    Poor Air    ");
-        }
-      else if (air_quality>2000 )
-       {
-              lcd.print("   Move Out !!  ");
-       }
+     
         if (isnan(air_quality)) {
         if (DEBUG) Serial.println("Failed to read from mq135");
       }
