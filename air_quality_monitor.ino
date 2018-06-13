@@ -11,6 +11,7 @@
 SoftwareSerial espSerial =  SoftwareSerial(2,3);      // arduino RX pin=2  arduino TX pin=3 w/ esp8266
 #include "MQ135.h"                                    // header file for mq135 gas sensor
 #include <LiquidCrystal.h>                            // header file for lcd
+int Contrast=500;
 LiquidCrystal lcd(12,11, 7, 6, 5, 4);                 // define pins of lcd connected to arduino
 
 const int sensorPin = A0;                              // sensor connected to analog0 pin of arduino
@@ -84,6 +85,8 @@ void setup() {
   
   DEBUG=true;             // enable debug serial
   Serial.begin(9600); 
+  analogWrite(9,24836);
+  analogWrite(10,Contrast);
   espSerial.begin(9600);  // enable software serial
                           // if esp8266 module's speed is not at 9600 change AT firmware to 9600. 
                           
