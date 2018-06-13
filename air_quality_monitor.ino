@@ -37,7 +37,7 @@ void showResponse(int waitTime){
 }
 
 //======================================================================== loop to write data on Thingspeak channel
-boolean thingSpeakWrite(float value1){
+boolean thingSpeakWrite(float value1, float value2){
   String cmd = "AT+CIPSTART=\"TCP\",\"";                  // TCP connection
   cmd += "184.106.153.149";                               // api.thingspeak.com
   cmd += "\",80";                                         // port 80
@@ -54,8 +54,8 @@ boolean thingSpeakWrite(float value1){
   
   getStr +="&field1=";
   getStr += String(value1);
-  //getStr +="&field2=";
-  //getStr += String(value2);
+  getStr +="&field2=";
+  getStr += String(value2);
   // getStr +="&field3=";
   // getStr += String(value3);
   // ...
@@ -67,7 +67,6 @@ boolean thingSpeakWrite(float value1){
   espSerial.println(cmd);
   if (DEBUG)  Serial.println(cmd);
   
-  delay(100);
   if(espSerial.find(">")){
     espSerial.print(getStr);
     if (DEBUG)  Serial.print(getStr);
